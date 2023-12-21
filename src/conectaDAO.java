@@ -21,10 +21,10 @@ public class conectaDAO {
         Connection conn = null;
         
         try {
-        
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/uc11?user=root&password=");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/uc11?user=root&password=root");
             
-        } catch (SQLException erro){
+        } catch (ClassNotFoundException | SQLException erro){
             JOptionPane.showMessageDialog(null, "Erro ConectaDAO" + erro.getMessage());
         }
         return conn;
