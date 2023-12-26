@@ -62,7 +62,41 @@ public class ProdutosDAO {
         }        
     }
     
+    public ProdutosDTO getProduto (int id){
+        conn = new conectaDAO().connectDB();
+        String sql = "SELECT * FROM produtos WHERE id = ?";
+        try {
+            prep = this.conn.prepareStatement(sql);
+            prep.setInt(1, id);
+            resultset = prep.executeQuery();
+            ProdutosDTO produto = new ProdutosDTO();
+            resultset.next();
+            produto.setId(id);
+            produto.setNome(resultset.getString("nome"));
+            produto.setValor(resultset.getInt("valor"));
+            produto.setStatus(resultset.getString("status"));
+            return produto;
+        } catch (Exception e) {
+            System.out.println("erro: " + e.getMessage());
+            return null;
+        }
+    }
     
+    public void venderProduto (int id, String status){       
+        ProdutosDTO produto = getProduto(id);
+        conn = new conectaDAO().connectDB();
+        String sql = "UPDATE produtos SET nome=?, valor=?, status=? WHERE id=?";
+        try {            
+            prep = conn.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);            
+            prep.setInt(4, id);            
+            prep.setString(1,produto.getNome());
+            prep.setInt(2,produto.getValor());
+            prep.setString(3, status); 
+            prep.execute();            
+        } catch (Exception e) {
+        System.out.println("Erro ao editar a tabela produtos: " + e.getMessage());
+        }
+    }
     
         
 }
